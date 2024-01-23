@@ -5,6 +5,8 @@ import com.example.fsapi.dto.FsBoardDto;
 import com.example.fsapi.service.FsBoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,7 @@ public class FsBoardRestController {
                     + "@exception 중복 <br />"
     )
     @PostMapping("")
-    public ResponseEntity<FsBoardDto.FsBoardAfterCreateDto> save(@Valid @RequestBody FsBoardDto.FsBoardCreateDto params) {
+    public ResponseEntity<FsBoardDto.FsBoardAfterCreateDto> save(@Valid @RequestBody FsBoardDto.FsBoardCreateDto params, HttpServletRequest request, HttpServletResponse response) {
         return ResponseEntity.status(HttpStatus.CREATED).body(FsBoardService.create(params));
     }
     @Operation(summary = "게시판 글 수정",
