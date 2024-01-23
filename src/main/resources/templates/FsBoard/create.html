@@ -23,8 +23,8 @@
             type: "POST",
             contentType : 'application/json; charset=utf-8',
             data: JSON.stringify({
-                'title' : $("#create_title").val(),
-                'content' : $("#create_content").val()
+                'title' : $('#create_title').val(),
+                'content' : $('#create_content').val()
             }),
             cache: false,
             success: (data, status, xhr)=>{
