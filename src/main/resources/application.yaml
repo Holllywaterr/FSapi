@@ -21,7 +21,8 @@ spring:
     properties:
       hibernate.format_sql: true
       hibernate.default_batch_fetch_size: 100
-sql.init.mode: always
+      hibernate.jdbc.time_zone: Asia/Seoul
+  sql.init.mode: always #data.sql 생성
 springdoc:
   swagger-ui:
     operations-sorter: alpha
