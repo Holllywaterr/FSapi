@@ -8,52 +8,153 @@
 <body>
 게시글 상세 조회
 
-<label for="detail_id">ID</label>
-<input id="detail_id" />
 <br/>
 <div>
     =========================================
 </div>
 제목<div id="div_title">-</div>
+작성일시<div id="div_created_at">-</div>
 내용<div id="div_content">-</div>
 
-<a onclick="detail_FsBoard()">select</a>
+<input id="detail_fsboard_id" type="hidden"/>
+////<br/>
+<div style="display: none;">
+    <label for="search_fsboardId">제목 키워드</label>
+    <input id="search_fsboardId" />
+    <label for="search_deleted">deleted 키워드</label>
+    <input id="search_deleted" />
+    <br/>
+    <label for="search_callpage">요청 페이지</label>
+    <input id="search_callpage" />
+    <label for="search_perpage">한번에 볼 페이지</label>
+    <input id="search_perpage" />
+    <br/>
+    <label for="search_sdate">시작일</label>
+    <input id="search_sdate" type="date" />
+    <label for="search_fdate">종료일</label>
+    <input id="search_fdate" type="date" />
+
+    <label for="search_orderby">정렬기준</label>
+    <select id="search_orderby">
+        <option value="created_at" selected="selected">작성일</option>
+    </select>
+    <label for="search_orderway">정렬방향</label>
+    <select id="search_orderway">
+        <option value="desc" selected="selected">역순</option>
+        <option value="asc">정순</option>
+    </select>
+</div>
+
+<div>
+    =========================================
+</div>
+총 댓글 수 : <h1 id="font_fscmt_list_size">-</h1> 개 <br/>
+<div style="display: none;">
+    가장 끝 페이지 수 : <h1 id="font_fscmt_page_size">-</h1> 개
+</div>
+<div id="tbody_fscmt_list">
+</div>
+////<br/>
+댓글 작성
+<input id="create_content" />
+<a onclick="create_fscmt()">comment</a>
+<!--<a onclick="detail_tbboard()">select</a>-->
 <script>
-    function detail_FsBoard(){
+    detailFsBoard();
+    function detailFsBoard(){
+
+        let temp_url_with_idx = window.location.href;
+        // http://localhost:8080/tbboard/detail/de0ea4ddc1cf46c1a971d770f8a94b44
+        let split_slash_temp_idx = temp_url_with_idx.split('/');
+        let temp_idx = split_slash_temp_idx[split_slash_temp_idx.length - 1];
+        let split_question_temp_idx = temp_idx.split('?');
+        if(split_question_temp_idx.length > 0){
+            temp_idx = split_question_temp_idx[0];
+            // de0ea4ddc1cf46c1a971d770f8a94b44
+        }
+        $("#detail_fsboard_id").val(temp_idx);
+        search_fscmt();
         $.ajax({
-            url: "/api/fsboard/" + $("#detail_id").val(),
+            url: "/api/fsboard/" + temp_idx,
             type: "GET",
             contentType : 'application/json; charset=utf-8',
             cache: false,
             success: (data, status, xhr)=>{
-                alert("data : " + JSON.stringify(data));
+                //alert("data : " + JSON.stringify(data));
                 $("#div_title").html(data.title);
                 $("#div_content").html(data.content);
+                $("#div_created_at").html(data.createdAt);
             },
             error: (data)=>{
             },
         });
 
     }
-    function create_FsBoard(){
+    function create_fscmt(){
         $.ajax({
-            url: "/api/FsBoard",
+            url: "/api/fscmt",
             type: "POST",
             contentType : 'application/json; charset=utf-8',
             data: JSON.stringify({
-                'title' : $("#create_title").val(),
+                'fsBoardId' : $("#detail_fsboard_id").val(),
                 'content' : $("#create_content").val()
             }),
             cache: false,
             success: (data, status, xhr)=>{
-                alert("data : " + JSON.stringify(data));
+                if(status == "success"){
+                    alert("data : " + JSON.stringify(data));
+                    search_fscmt();
+                    $("#create_content").val("");
+                }
+                //alert("data : " + JSON.stringify(data));
                 //alert("status : " + JSON.stringify(status));
                 //alert("xhr : " + JSON.stringify(xhr));
             },
             error: (data)=>{
+                alert("data : " + JSON.stringify(data));
             },
         });
 
+    }
+
+    function search_fscmt(){
+        $.ajax({
+            url: "/api/fscmt/pagedList",
+            type: "POST",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                'sdate' : $("#search_sdate").val(),
+                'fdate' : $("#search_fdate").val(),
+                'orderby' : $("#search_orderby").val(),
+                'orderway' : $("#search_orderway").val(),
+                'callpage' : $("#search_callpage").val(),
+                'perpage' : $("#search_perpage").val(),
+                'fs_board_id' : $("#search_fsboardId").val(),
+                'deleted' : $("#search_deleted").val()
+            }),
+            cache: false,
+            success: (data, status, xhr)=>{
+                //alert("data : " + JSON.stringify(data));
+                $("#font_fscmt_list_size").html(data.listsize);
+                $("#font_fscmt_page_size").html(data.lastpage);
+                $("#tbody_fscmt_list").html("");
+                $("#search_callpage").val(data.callpage);
+                $("#search_perpage").val(data.perpage);
+                let tlist = data.list;
+                for(let i=0;i<tlist.length;i++){
+                    $("#tbody_fscmt_list").append(
+                        "<div>" +tlist[i].content + "//"+ JSON.stringify(tlist[i].created_at)  +"</div>"
+                    );
+                }
+
+                //alert("data length : " + data.list.length);
+                //alert("status : " + JSON.stringify(status));
+                //alert("xhr : " + JSON.stringify(xhr));
+            },
+            error: (data)=>{
+                alert("data : " + JSON.stringify(data));
+            },
+        });
     }
 
 </script>

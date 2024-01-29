@@ -13,4 +13,7 @@ public class FsBoardPageController {
         return "/fsboard/" + page;
     }
 
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable("id") String id){ return "/fsboard/detail";}
+
 }
