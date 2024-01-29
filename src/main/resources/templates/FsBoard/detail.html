@@ -7,6 +7,13 @@
 </head>
 <body>
 게시글 상세 조회
+<br/>
+image
+<div id="div_fsboard_pics_image">
+</div>
+file
+<div id="div_fsboard_pics_file">
+</div>
 
 <br/>
 <div>
@@ -59,6 +66,147 @@
 <input id="create_content" />
 <a onclick="create_fscmt()">comment</a>
 <!--<a onclick="detail_tbboard()">select</a>-->
+<input class="hide" type="file" id="create_mpic" onchange="readURLFile(this)" accept="image/*" />
+<button class="btn btn-warning me-2" onclick="$('#create_mpic').click();return false;">사진 추가</button>
+
+<script>
+    let limit_each_file_size = 10;
+    function readURLFile(input) {
+        let temp_id = $(input).attr("id") + "";
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.readAsDataURL(input.files[0]);
+            reader.onload = function(e) {
+                let temp_each_file_size = input.files[0].size / (1024 * 1024);
+                if (temp_each_file_size > limit_each_file_size) {
+                    alert("파일 1개 당 " + limit_each_file_size + "mb 용량 제한 초과 입니다!");
+                    $(input).val("");
+                    return false;
+                }
+                if (!input.files[0].type.match('image.*')) {
+                    //alert(input.files[0].type);
+                    alert("이미지 파일이 아닙니다!");
+                    $('#' + temp_id).val(null);
+                    $('#img_' + temp_id).attr('src', "/resources/image/no-pic.jpg");
+                } else {
+                    listener_upload_file(input.files[0]);
+                }
+            }
+        }
+    }
+    function listener_upload_file(obj_file) {
+        let fileData = new FormData();
+        fileData.append("file", obj_file);
+
+        $.ajax({
+            url: "/api/default/uploadFile",
+            type: "POST",
+            data: fileData ,
+            cache : false,
+            contentType : false,
+            processData : false,
+            success: (data, status, xhr)=>{
+                //alert(xhr.status);
+                switch(xhr.status){
+                    case 201:
+                        //alert(data);
+                        create_fspic(data);
+                        break;
+                    default:
+                        console.log("no matching status code");
+                }
+            },
+            error: (data)=>{
+                switch(data.status){
+                    case 500:
+                        alert("권한 외의 요청입니다.");
+                        location.href="/index";
+                        break;
+                    default:
+                        alert("네트워크 에러가 발생하였습니다. 다시 요청해주시기 바랍니다.");
+                        console.log("no matching status code");
+                        break;
+                }
+            },
+        });
+
+
+    }
+</script>
+<script>
+    function listener_delete_fspic(obj_this){
+        let id = $(obj_this).attr("key");
+        //alert(id);
+        delete_fspic(id);
+    }
+    function delete_fspic(id){
+        $.ajax({
+            url: "/api/fspic",
+            type: "DELETE",
+            contentType : 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                'id' : id
+            }),
+            cache: false,
+            success: (data, status, xhr)=>{
+                if(status == "success"){
+                    //$("#div_fspic_" + id).remove();
+                    $("#p_fspic_" + id).text("Y");
+                }
+
+                //alert("data : " + JSON.stringify(data));
+                //alert("status : " + JSON.stringify(status));
+                //alert("xhr : " + JSON.stringify(xhr));
+            },
+            error: (data)=>{
+            },
+        });
+    }
+
+    function create_fspic(content) {
+        $.ajax({
+            url: "/api/fspic",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                'fsBoardId': $("#detail_fsboard_id").val(),
+                'content': content,
+                'type': "image"
+            }),
+            cache: false,
+            success: (data, status, xhr) => {
+                //
+                alert("xhr : " + JSON.stringify(xhr));
+                if (status == "success") {
+
+                    //xhr : {"readyState":4,"responseText":"{\"id\":\"f051928922e7423889b9d9b035954204\"}","responseJSON":{"id":"f051928922e7423889b9d9b035954204"},"status":201,"statusText":"success"}
+                    //alert(content);
+
+                    let pic = new Map();
+                    pic.id = data.id;
+                    pic.content = content;
+                    pic.deleted = "N";
+
+                    $("#div_fsboard_pics_image").append(
+                        "<div id='div_fspic_" + pic.id + "'>"
+                        + "id : " + pic.id
+                        + "//deleted : <font id='p_fspic_" + pic.id + "'>" + pic.deleted + "</font>"
+                        + "<img height='100px' src='" + pic.content + "' />"
+                        + "<a key='" + pic.id + "' onclick='listener_delete_fspic(this)'> 삭제</a>"
+                        + "</div>"
+                    );
+
+                }
+                //alert("data : " + JSON.stringify(data));
+                //alert("status : " + JSON.stringify(status));
+                //alert("xhr : " + JSON.stringify(xhr));
+            },
+            error: (data) => {
+            },
+        });
+    }
+</script>
+
 <script>
     detailFsBoard();
     function detailFsBoard(){
