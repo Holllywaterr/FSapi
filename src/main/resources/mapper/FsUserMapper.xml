@@ -3,106 +3,106 @@
 <mapper namespace="com.example.fsapi.mapper.FsUserMapper">
 
     <select id="detail" parameterType="hashMap" resultType="com.example.fsapi.dto.FsUserDto$FsUserSelectDto">
-        SELECT FsUser.id
-             ,FsUser.uid
-             ,FsUser.nick
-             ,FsUser.sfrom
-             ,FsUser.name
-             ,FsUser.process
-             ,FsUser.phone
-             ,FsUser.mpic
-             ,FsUser.deleted
-             ,FsUser.created_at
-             ,FsUser.modified_at
-        FROM FsUser
-        WHERE FsUser.id = #{id}
+        SELECT fs_user.id
+             ,fs_user.uid
+             ,fs_user.nick
+             ,fs_user.sfrom
+             ,fs_user.name
+             ,fs_user.process
+             ,fs_user.phone
+             ,fs_user.mpic
+             ,fs_user.deleted
+             ,fs_user.created_at
+             ,fs_user.modified_at
+        FROM fs_user
+        WHERE fs_user.id = #{id}
     </select>
     <select id="list" parameterType="com.example.fsapi.dto.FsUserDto$FsUserListDto" resultType="com.example.fsapi.dto.FsUserDto$FsUserSelectDto">
-        SELECT FsUser.id
-        ,FsUser.uid
-        ,FsUser.nick
-        ,FsUser.sfrom
-        ,FsUser.name
-        ,FsUser.process
-        ,FsUser.phone
-        ,FsUser.mpic
-        ,FsUser.deleted
-        ,FsUser.created_at
-        ,FsUser.modified_at
-        FROM FsUser
-        WHERE FsUser.id is not null
-        <if test = "uid != null and uid !=''">AND FsUser.uid LIKE CONCAT('%', #{uid}, '%')</if>
-        <if test = "nick != null and nick !=''">AND FsUser.nick LIKE CONCAT('%', #{nick}, '%')</if>
-        <if test = "name != null and name !=''">AND FsUser.name LIKE CONCAT('%', #{name}, '%')</if>
-        <if test = "phone != null and phone !=''">AND FsUser.phone LIKE CONCAT('%', #{phone})</if>
-        <if test = "process != null and process !=''">AND FsUser.process = #{process}</if>
-        <if test = "deleted != null and deleted !=''">AND FsUser.deleted = #{deleted}</if>
+        SELECT fs_user.id
+        ,fs_user.uid
+        ,fs_user.nick
+        ,fs_user.sfrom
+        ,fs_user.name
+        ,fs_user.process
+        ,fs_user.phone
+        ,fs_user.mpic
+        ,fs_user.deleted
+        ,fs_user.created_at
+        ,fs_user.modified_at
+        FROM fs_user
+        WHERE fs_user.id is not null
+        <if test = "uid != null and uid !=''">AND fs_user.uid LIKE CONCAT('%', #{uid}, '%')</if>
+        <if test = "nick != null and nick !=''">AND fs_user.nick LIKE CONCAT('%', #{nick}, '%')</if>
+        <if test = "name != null and name !=''">AND fs_user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND fs_user.phone LIKE CONCAT('%', #{phone})</if>
+        <if test = "process != null and process !=''">AND fs_user.process = #{process}</if>
+        <if test = "deleted != null and deleted !=''">AND fs_user.deleted = #{deleted}</if>
     </select>
 
     <select id="moreList" parameterType="com.example.fsapi.dto.FsUserDto$FsUserMoreListDto" resultType="com.example.fsapi.dto.FsUserDto$FsUserSelectDto">
-        SELECT FsUser.id
-        ,,FsUser.uid
-        ,FsUser.nick
-        ,FsUser.sfrom
-        ,FsUser.name
-        ,FsUser.process
-        ,FsUser.phone
-        ,FsUser.mpic
-        ,FsUser.deleted
-        ,FsUser.created_at
-        ,FsUser.modified_at
-        FROM FsUser
-        WHERE FsUser.id is not null
-        <if test = "uid != null and uid !=''">AND FsUser.uid LIKE CONCAT('%', #{uid}, '%')</if>
-        <if test = "nick != null and nick !=''">AND FsUser.nick LIKE CONCAT('%', #{nick}, '%')</if>
-        <if test = "name != null and name !=''">AND FsUser.name LIKE CONCAT('%', #{name}, '%')</if>
-        <if test = "phone != null and phone !=''">AND FsUser.phone LIKE CONCAT('%', #{phone})</if>
-        <if test = "process != null and process !=''">AND FsUser.process = #{process}</if>
-        <if test = "deleted != null and deleted !=''">AND FsUser.deleted = #{deleted}</if>
+        SELECT fs_user.id
+        ,,fs_user.uid
+        ,fs_user.nick
+        ,fs_user.sfrom
+        ,fs_user.name
+        ,fs_user.process
+        ,fs_user.phone
+        ,fs_user.mpic
+        ,fs_user.deleted
+        ,fs_user.created_at
+        ,fs_user.modified_at
+        FROM fs_user
+        WHERE fs_user.id is not null
+        <if test = "uid != null and uid !=''">AND fs_user.uid LIKE CONCAT('%', #{uid}, '%')</if>
+        <if test = "nick != null and nick !=''">AND fs_user.nick LIKE CONCAT('%', #{nick}, '%')</if>
+        <if test = "name != null and name !=''">AND fs_user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND fs_user.phone LIKE CONCAT('%', #{phone})</if>
+        <if test = "process != null and process !=''">AND fs_user.process = #{process}</if>
+        <if test = "deleted != null and deleted !=''">AND fs_user.deleted = #{deleted}</if>
         <if test = "cdatetime != null and cdatetime !=''">
-            <if test = "cway =='before'">AND STR_TO_DATE(#{cdatetime}, '%Y-%m-%d %H:%i:%s.%f') > FsUser.created_at ORDER BY FsUser.created_at DESC</if>
-            <if test = "cway =='recent'">AND FsUser.created_at > STR_TO_DATE(#{cdatetime}, '%Y-%m-%d %H:%i:%s.%f') ORDER BY FsUser.created_at ASC</if>
+            <if test = "cway =='before'">AND STR_TO_DATE(#{cdatetime}, '%Y-%m-%d %H:%i:%s.%f') > fs_user.created_at ORDER BY fs_user.created_at DESC</if>
+            <if test = "cway =='recent'">AND fs_user.created_at > STR_TO_DATE(#{cdatetime}, '%Y-%m-%d %H:%i:%s.%f') ORDER BY fs_user.created_at ASC</if>
         </if>
         LIMIT 0, #{permore}
     </select>
 
     <select id="pagedList" parameterType="com.example.fsapi.dto.FsUserDto$FsUserPagedListDto" resultType="com.example.fsapi.dto.FsUserDto$FsUserSelectDto">
-        SELECT FsUser.id
-        ,FsUser.uid
-        ,FsUser.nick
-        ,FsUser.sfrom
-        ,FsUser.name
-        ,FsUser.process
-        ,FsUser.phone
-        ,FsUser.mpic
-        ,FsUser.deleted
-        ,FsUser.created_at
-        ,FsUser.modified_at
-        FROM FsUser
-        WHERE FsUser.id is not null
-        <if test = "uid != null and uid !=''">AND FsUser.uid LIKE CONCAT('%', #{uid}, '%')</if>
-        <if test = "nick != null and nick !=''">AND FsUser.nick LIKE CONCAT('%', #{nick}, '%')</if>
-        <if test = "name != null and name !=''">AND FsUser.name LIKE CONCAT('%', #{name}, '%')</if>
-        <if test = "phone != null and phone !=''">AND FsUser.phone LIKE CONCAT('%', #{phone})</if>
-        <if test = "process != null and process !=''">AND FsUser.process = #{process}</if>
-        <if test = "deleted != null and deleted !=''">AND FsUser.deleted = #{deleted}</if>
-        <if test = "orderby =='created_at'">ORDER BY FsUser.created_at </if>
-        <if test = "orderby =='title'">ORDER BY FsUser.title </if>
+        SELECT fs_user.id
+        ,fs_user.uid
+        ,fs_user.nick
+        ,fs_user.sfrom
+        ,fs_user.name
+        ,fs_user.process
+        ,fs_user.phone
+        ,fs_user.mpic
+        ,fs_user.deleted
+        ,fs_user.created_at
+        ,fs_user.modified_at
+        FROM fs_user
+        WHERE fs_user.id is not null
+        <if test = "uid != null and uid !=''">AND fs_user.uid LIKE CONCAT('%', #{uid}, '%')</if>
+        <if test = "nick != null and nick !=''">AND fs_user.nick LIKE CONCAT('%', #{nick}, '%')</if>
+        <if test = "name != null and name !=''">AND fs_user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND fs_user.phone LIKE CONCAT('%', #{phone})</if>
+        <if test = "process != null and process !=''">AND fs_user.process = #{process}</if>
+        <if test = "deleted != null and deleted !=''">AND fs_user.deleted = #{deleted}</if>
+        <if test = "orderby =='created_at'">ORDER BY fs_user.created_at </if>
+        <if test = "orderby =='title'">ORDER BY fs_user.title </if>
         <if test = "orderway =='asc'">ASC</if>
         <if test = "orderway =='desc'">DESC</if>
         LIMIT #{callpage}, #{perpage}
     </select>
 
     <select id="pagedListCount" parameterType="com.example.fsapi.dto.FsUserDto$FsUserPagedListDto" resultType="Integer">
-        SELECT count(FsUser.id) as listsize
-        FROM FsUser
-        WHERE FsUser.id is not null
-        <if test = "uid != null and uid !=''">AND FsUser.uid LIKE CONCAT('%', #{uid}, '%')</if>
-        <if test = "nick != null and nick !=''">AND FsUser.nick LIKE CONCAT('%', #{nick}, '%')</if>
-        <if test = "name != null and name !=''">AND FsUser.name LIKE CONCAT('%', #{name}, '%')</if>
-        <if test = "phone != null and phone !=''">AND FsUser.phone LIKE CONCAT('%', #{phone})</if>
-        <if test = "process != null and process !=''">AND FsUser.process = #{process}</if>
-        <if test = "deleted != null and deleted !=''">AND FsUser.deleted = #{deleted}</if>
+        SELECT count(fs_user.id) as listsize
+        FROM fs_user
+        WHERE fs_user.id is not null
+        <if test = "uid != null and uid !=''">AND fs_user.uid LIKE CONCAT('%', #{uid}, '%')</if>
+        <if test = "nick != null and nick !=''">AND fs_user.nick LIKE CONCAT('%', #{nick}, '%')</if>
+        <if test = "name != null and name !=''">AND fs_user.name LIKE CONCAT('%', #{name}, '%')</if>
+        <if test = "phone != null and phone !=''">AND fs_user.phone LIKE CONCAT('%', #{phone})</if>
+        <if test = "process != null and process !=''">AND fs_user.process = #{process}</if>
+        <if test = "deleted != null and deleted !=''">AND fs_user.deleted = #{deleted}</if>
     </select>
 
 </mapper>
