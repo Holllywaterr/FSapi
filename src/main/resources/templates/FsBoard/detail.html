@@ -16,7 +16,7 @@
 작성일시<div id="div_created_at">-</div>
 내용<div id="div_content">-</div>
 
-<input id="detail_fsboard_id" type="hidden"/>
+보드 아이디<div id="detail_fsboard_id"></div>
 ////<br/>
 <div style="display: none;">
     <label for="search_fsboardId">제목 키워드</label>
@@ -63,6 +63,7 @@
     detailFsBoard();
     function detailFsBoard(){
 
+        // board_id 짜르기
         let temp_url_with_idx = window.location.href;
         // http://localhost:8080/tbboard/detail/de0ea4ddc1cf46c1a971d770f8a94b44
         let split_slash_temp_idx = temp_url_with_idx.split('/');
@@ -72,7 +73,10 @@
             temp_idx = split_question_temp_idx[0];
             // de0ea4ddc1cf46c1a971d770f8a94b44
         }
+
+        // detail_fsboard_id의 값을 temp_idx(fsbord_id)로 설정
         $("#detail_fsboard_id").val(temp_idx);
+
         search_fscmt();
         $.ajax({
             url: "/api/fsboard/" + temp_idx,
@@ -83,9 +87,11 @@
                 //alert("data : " + JSON.stringify(data));
                 $("#div_title").html(data.title);
                 $("#div_content").html(data.content);
-                $("#div_created_at").html(data.createdAt);
+                $("#div_created_at").html(data.created_at);
+                $("#detail_fsboard_id").html(temp_idx);
             },
             error: (data)=>{
+                alert("data : " + JSON.stringify(data));
             },
         });
 
@@ -129,7 +135,7 @@
                 'orderway' : $("#search_orderway").val(),
                 'callpage' : $("#search_callpage").val(),
                 'perpage' : $("#search_perpage").val(),
-                'fs_board_id' : $("#search_fsboardId").val(),
+                'fs_board_id' : $("#detail_fsboard_id").val(),
                 'deleted' : $("#search_deleted").val()
             }),
             cache: false,
